@@ -2,19 +2,22 @@
 set -e
 
 # Configure commands available
-apt-get update\
+DEBIAN_FRONTEND=noninteractive \
+echo 'keyboard-configuration keyboard-configuration/layout select Finnish' | debconf-set-selections && \
+echo 'keyboard-configuration keyboard-configuration/variant select Finnish' | debconf-set-selections && \
+echo 'keyboard-configuration keyboard-configuration/model select Generic 105-key PC' | debconf-set-selections \
+&& apt-get update\
 && apt-get upgrade -y\
-&& apt-get install -y tini ttyd\
- nano\
- vim-tiny\
- iputils-ping\
- tmux\
- screen\
- tree\
+&& apt-get install -y\
  wget\
- less\
- file\
- python3 \
+ tini\
+ mate-desktop-environment-core \
+&& wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
+&& cd /etc/apt/sources.list.d; wget https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/bookworm/xpra.sources\
+&& apt-get update\
+&& apt-get install -y\
+ xpra\
+ xpra-html5 \
 && rm -f /etc/pam.d/login \
 && echo "" > /etc/legal \
 && apt-get clean \
@@ -26,16 +29,9 @@ apt-get update\
 && rm -fr /var/cache/apt \
 && rm -fr /var/log/*
 
-# List of commands that are not wanted
-rm /usr/bin/ping6 \
-&& rm /usr/bin/unminimize
-
-# Remove write permissions from key directories
-chmod -R a-w /usr/bin /usr/sbin /sbin
-
 # Configure user's default settings
-mkdir -p /etc/skel
-ln -s my-work/.profile /etc/skel/.profile
+# rm /etc/skel/.profile
+# ln -s my-work/.profile /etc/skel/.profile
 
 # Generate a minimum pam.d/login file to correctly show motd message above
 cat > /etc/pam.d/login << 'EOF'
@@ -54,7 +50,7 @@ EOF
 echo '
 ,-.___,-.
 \_/  _\_/
-  )>_O(        Ubuntu Linux 24.04
+  )>_O(        Debian Bookworm
  { (_) }       cat /readme
   `-^-´ hjw
 ' > /etc/motd

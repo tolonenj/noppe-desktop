@@ -2,9 +2,10 @@
 set -e
 
 # Add user from environment variables
-useradd -m -s /bin/bash $USERNAME
-echo "$USERNAME:$PASSWORD" | chpasswd &> /dev/null
-ln -s my-work/.profile /home/$USERNAME/.profile
+# useradd -m -s /bin/bash $USERNAME
+# echo "$USERNAME:$PASSWORD" | chpasswd &> /dev/null
+# ln -s my-work/.profile /home/$USERNAME/.profile
 
-# Start ttyd
-exec ttyd -W -p 8787 login
+# Start xpra
+#exec xpra start --start=xterm --daemon=no --bind-tcp=0.0.0.0:8787
+exec xpra start --start=mate-session --daemon=no --bind-tcp=0.0.0.0:8787

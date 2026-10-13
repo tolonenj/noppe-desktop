@@ -1,8 +1,9 @@
-FROM ubuntu:24.04
+FROM debian:bookworm
 
-COPY --chmod=500 ./install_ubuntu.sh /install_ubuntu.sh
-RUN /install_ubuntu.sh
-RUN rm /install_ubuntu.sh
+COPY --chmod=500 ./install_desktop.sh /install_desktop.sh
+
+RUN /install_desktop.sh
+RUN rm /install_desktop.sh
 
 COPY --chmod=500 ./init /init
 
